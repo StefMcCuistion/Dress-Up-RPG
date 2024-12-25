@@ -14,7 +14,7 @@ class Button():
         self.y = y
         self.font = font
         self.rect = self.img.get_rect(center=(self.x, self.y))
-        self.txt = font.render(self.name, True, 'light gray')
+        self.txt = font.render(self.name, True, 'gray')
         self.txt_rect = self.txt.get_rect(center=(self.x, self.y))
     
     def update(self, screen):
@@ -27,9 +27,9 @@ class Button():
         
     def change_color(self, pos, font):
         if pos[0] in range(self.rect.left, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
-            self.txt = font.render(self.name, True, 'yellow')
+            self.txt = font.render(self.name, True, 'white')
         else:
-            self.txt = font.render(self.name, True, 'light gray')
+            self.txt = font.render(self.name, True, 'gray')
 
 def activate_window(title):
     app = pywinauto.Application().connect(title_re=title)
@@ -58,7 +58,9 @@ def main_menu(res):
     bg_scaled = pygame.transform.scale(bg_img, res)
 
     button_surf = pygame.image.load('img_files/ui_button.png')
-    button = Button('CLOSE', button_surf, res[0]/2, res[1]*.8, font_main)
+    button_start = Button('START', button_surf, res[0]/2, res[1]*.45, font_main)
+    button_settings = Button('SETTINGS', button_surf, res[0]/2, res[1]*.65, font_main)
+    button_close = Button('CLOSE', button_surf, res[0]/2, res[1]*.85, font_main)
     
     while True:
         screen.fill('blue')
@@ -68,11 +70,15 @@ def main_menu(res):
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button.check_for_input(pygame.mouse.get_pos()):
+                if button_close.check_for_input(pygame.mouse.get_pos()):
                     pygame.quit()
                     exit()
-        button.update(screen)
-        button.change_color(pygame.mouse.get_pos(), font_main)
+        button_start.update(screen)
+        button_settings.update(screen)
+        button_close.update(screen)
+        button_start.change_color(pygame.mouse.get_pos(), font_main)
+        button_settings.change_color(pygame.mouse.get_pos(), font_main)
+        button_close.change_color(pygame.mouse.get_pos(), font_main)
         cursor_pos = pygame.mouse.get_pos()
         screen.blit(cursor_img, cursor_pos)
         pygame.display.update()
