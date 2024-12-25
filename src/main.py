@@ -5,6 +5,7 @@ import os
 from sys import exit
 import ctypes
 import pywinauto
+import pyautogui
 
 class Button():
     def __init__(self, name, img, x, y, font):
@@ -48,10 +49,7 @@ def get_display_size():
     root.destroy()
     return width, height
 
-def main_menu(res):
-    screen = pygame.display.set_mode(res, pygame.FULLSCREEN)
-    pygame.display.set_caption('Dress Up RPG')
-    activate_window("Dress Up RPG")
+def main_menu(res, screen):
     clock = pygame.time.Clock()
     font_main = pygame.font.SysFont('cambria', 50)
 
@@ -59,11 +57,12 @@ def main_menu(res):
     cursor = pygame.cursors.Cursor((0,0), cursor_img)
     pygame.mouse.set_cursor(cursor)
 
+    mixer.music.load("music/claire_de_lune.mp3")
+    mixer.music.play(-1)
 
     bg_img = pygame.image.load(f"img_files/ui_main_menu.png")
     bg_scaled = pygame.transform.scale(bg_img, res)
     screen.blit(bg_scaled, (0,0))
-
 
     button_surf = pygame.image.load('img_files/ui_button.png')
     button_start = Button('START', button_surf, res[0]/2, res[1]*.45, font_main)
@@ -79,6 +78,9 @@ def main_menu(res):
                 if button_close.check_for_input(pygame.mouse.get_pos()):
                     pygame.quit()
                     exit()
+                if button_settings.check_for_input(pygame.mouse.get_pos()):
+                    mixer.music.stop()
+                    settings_menu(res, screen)
         button_start.update(screen)
         button_settings.update(screen)
         button_close.update(screen)
@@ -88,20 +90,44 @@ def main_menu(res):
         pygame.display.update()
         clock.tick(60)
 
+def settings_menu(res, screen):
+    screen.fill('black')
+    clock = pygame.time.Clock()
+    font_main = pygame.font.SysFont('cambria', 50)
+
+    button_surf = pygame.image.load('img_files/ui_button.png')
+    button_return = Button('RETURN', button_surf, res[0]/2, res[1]*.85, font_main)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_return:
+                    main_menu(res, screen)
+        button_return.update(screen)
+        button_return.change_color(pygame.mouse.get_pos(), font_main)
+        pygame.display.update()
+        clock.tick(60)
+
 def main():
     os.environ['SDL_VIDEO_CENTERED'] = '1'
     pygame.init()
     pygame.font.init()
     ctypes.windll.user32.SetProcessDPIAware()
 
-    pygame.mouse.set_visible(True)
-
 
     x, y = get_display_size()
     res = (x, y)
     print(f"Resolution = {res}!")
 
-    main_menu(res)
+    pygame.mouse.set_visible(True)
+
+    screen = pygame.display.set_mode(res, pygame.FULLSCREEN)
+    pygame.display.set_caption('Dress Up RPG')
+    activate_window("Dress Up RPG")
+
+    pyautogui.moveTo((res[0]/2, res[1]/2))
+
+    main_menu(res, screen)
 
 if __name__ == "__main__":
     main()
