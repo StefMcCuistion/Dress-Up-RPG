@@ -8,14 +8,14 @@ import pywinauto
 import pyautogui
 
 class Button():
-    def __init__(self, name, img, x, y, font):
+    def __init__(self, name, x, y):
         self.name = name
-        self.img = img
+        self.img = pygame.image.load('img_files/ui_button.png')
         self.x = x
         self.y = y
-        self.font = font
+        self.font = pygame.font.SysFont('cambria', 50)
         self.rect = self.img.get_rect(center=(self.x, self.y))
-        self.txt = font.render(self.name, True, 'gray')
+        self.txt = self.font.render(self.name, True, 'gray')
         self.txt_rect = self.txt.get_rect(center=(self.x, self.y))
     
     def update(self, screen):
@@ -26,12 +26,12 @@ class Button():
         if pos[0] in range(self.rect.left, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
             return 1
         
-    def change_color(self, pos, font):
+    def change_color(self, pos):
         if pos[0] in range(self.rect.left, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
-            self.txt = font.render(self.name, True, 'white')
+            self.txt = self.font.render(self.name, True, 'white')
             self.img = pygame.image.load('img_files/ui_button_selected.png')
         else:
-            self.txt = font.render(self.name, True, 'gray')
+            self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_button.png')
 
 
@@ -49,7 +49,7 @@ def get_display_size():
     root.destroy()
     return width, height
 
-def main_menu(res, screen, clock, font):
+def main_menu(res, screen, clock):
     mixer.music.load("music/claire_de_lune.mp3")
     mixer.music.play(-1)
 
@@ -57,10 +57,9 @@ def main_menu(res, screen, clock, font):
     bg_scaled = pygame.transform.scale(bg_img, res)
     screen.blit(bg_scaled, (0,0))
 
-    button_surf = pygame.image.load('img_files/ui_button.png')
-    button_start = Button('START', button_surf, res[0]/2, res[1]*.45, font)
-    button_settings = Button('SETTINGS', button_surf, res[0]/2, res[1]*.65, font)
-    button_close = Button('CLOSE', button_surf, res[0]/2, res[1]*.85, font)
+    button_start = Button('START', res[0]/2, res[1]*.45)
+    button_settings = Button('SETTINGS', res[0]/2, res[1]*.65)
+    button_close = Button('CLOSE', res[0]/2, res[1]*.85)
     
     while True:
         for event in pygame.event.get():
@@ -73,21 +72,22 @@ def main_menu(res, screen, clock, font):
                     exit()
                 if button_settings.check_for_input(pygame.mouse.get_pos()):
                     mixer.music.stop()
-                    settings_menu(res, screen, clock, font)
+                    settings_menu(res, screen, clock)
+                if button_start.check_for_input(pygame.mouse.get_pos()):
+                    play(res, screen, clock)
         button_start.update(screen)
         button_settings.update(screen)
         button_close.update(screen)
-        button_start.change_color(pygame.mouse.get_pos(), font_main)
-        button_settings.change_color(pygame.mouse.get_pos(), font_main)
-        button_close.change_color(pygame.mouse.get_pos(), font_main)
+        button_start.change_color(pygame.mouse.get_pos())
+        button_settings.change_color(pygame.mouse.get_pos())
+        button_close.change_color(pygame.mouse.get_pos())
         pygame.display.update()
         clock.tick(60)
 
-def settings_menu(res, screen, clock, font):
-    screen.fill('black')
+def settings_menu(res, screen, clock):
+    screen.fill('gray')
 
-    button_surf = pygame.image.load('img_files/ui_button.png')
-    button_return = Button('RETURN', button_surf, res[0]/2, res[1]*.85, font_main)
+    button_return = Button('RETURN', res[0]/2, res[1]*.85)
 
     while True:
         for event in pygame.event.get():
@@ -96,16 +96,14 @@ def settings_menu(res, screen, clock, font):
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_return:
-                    main_menu(res, screen, clock, font)
+                    main_menu(res, screen, clock)
         button_return.update(screen)
-        button_return.change_color(pygame.mouse.get_pos(), font_main)
+        button_return.change_color(pygame.mouse.get_pos())
         pygame.display.update()
         clock.tick(60)
 
-def play(res, screen, clock, font):
-    screen.fill('black')
-
-    button_surf = pygame.image.load('img_files/ui_button.png')
+def play(res, screen, clock):
+    screen.fill('white')
 
     while True:
         for event in pygame.event.get():
@@ -123,7 +121,6 @@ def main():
     ctypes.windll.user32.SetProcessDPIAware() # keeps windows GUI scale settings from messing with resolution
 
     clock = pygame.time.Clock()
-    font_main = pygame.font.SysFont('cambria', 50)
 
     # screen and window settings
     x, y = get_display_size()
@@ -140,7 +137,7 @@ def main():
     pygame.mouse.set_cursor(cursor)
     pyautogui.moveTo((res[0]/2, res[1]/2)) # centers cursor
 
-    main_menu(res, screen, clock, font_main)
+    main_menu(res, screen, clock)
 
 if __name__ == "__main__":
     main()
