@@ -109,17 +109,16 @@ def settings_menu(res, screen):
         clock.tick(60)
 
 def main():
-    os.environ['SDL_VIDEO_CENTERED'] = '1'
+    # initialize
+    os.environ['SDL_VIDEO_CENTERED'] = '1' # centers window when not in fullscreen
     pygame.init()
     pygame.font.init()
-    ctypes.windll.user32.SetProcessDPIAware()
+    ctypes.windll.user32.SetProcessDPIAware() # keeps windows GUI scale settings from messing with resolution
 
-
+    # gets and sets resolution
     x, y = get_display_size()
     res = (x, y)
-    print(f"Resolution = {res}!")
-
-    pygame.mouse.set_visible(True)
+    print(f"Resolution = {res}!") # debug
 
     screen = pygame.display.set_mode(res, pygame.FULLSCREEN)
     pygame.display.set_caption('Dress Up RPG')
