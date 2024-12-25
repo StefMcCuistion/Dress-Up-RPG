@@ -28,8 +28,11 @@ class Button():
     def change_color(self, pos, font):
         if pos[0] in range(self.rect.left, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
             self.txt = font.render(self.name, True, 'white')
+            self.img = pygame.image.load('img_files/ui_button_selected.png')
         else:
             self.txt = font.render(self.name, True, 'gray')
+            self.img = pygame.image.load('img_files/ui_button.png')
+
 
 def activate_window(title):
     app = pywinauto.Application().connect(title_re=title)
