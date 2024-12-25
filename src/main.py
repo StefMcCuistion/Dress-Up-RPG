@@ -53,9 +53,6 @@ def main_menu(res, screen):
     clock = pygame.time.Clock()
     font_main = pygame.font.SysFont('cambria', 50)
 
-    cursor_img = pygame.image.load('img_files/ui_cursor.png')
-    cursor = pygame.cursors.Cursor((0,0), cursor_img)
-    pygame.mouse.set_cursor(cursor)
 
     mixer.music.load("music/claire_de_lune.mp3")
     mixer.music.play(-1)
@@ -115,7 +112,7 @@ def main():
     pygame.font.init()
     ctypes.windll.user32.SetProcessDPIAware() # keeps windows GUI scale settings from messing with resolution
 
-    # gets and sets resolution
+    # screen and window settings
     x, y = get_display_size()
     res = (x, y)
     print(f"Resolution = {res}!") # debug
@@ -124,7 +121,11 @@ def main():
     pygame.display.set_caption('Dress Up RPG')
     activate_window("Dress Up RPG")
 
-    pyautogui.moveTo((res[0]/2, res[1]/2))
+    # cursor settings
+    cursor_img = pygame.image.load('img_files/ui_cursor.png')
+    cursor = pygame.cursors.Cursor((0,0), cursor_img)
+    pygame.mouse.set_cursor(cursor)
+    pyautogui.moveTo((res[0]/2, res[1]/2)) #centers cursor
 
     main_menu(res, screen)
 
