@@ -56,9 +56,14 @@ def main_menu(res):
     font_main = pygame.font.SysFont('cambria', 50)
 
     cursor_img = pygame.image.load('img_files/ui_cursor.png')
+    cursor = pygame.cursors.Cursor((0,0), cursor_img)
+    pygame.mouse.set_cursor(cursor)
+
 
     bg_img = pygame.image.load(f"img_files/ui_main_menu.png")
     bg_scaled = pygame.transform.scale(bg_img, res)
+    screen.blit(bg_scaled, (0,0))
+
 
     button_surf = pygame.image.load('img_files/ui_button.png')
     button_start = Button('START', button_surf, res[0]/2, res[1]*.45, font_main)
@@ -66,8 +71,6 @@ def main_menu(res):
     button_close = Button('CLOSE', button_surf, res[0]/2, res[1]*.85, font_main)
     
     while True:
-        screen.fill('blue')
-        screen.blit(bg_scaled, (0,0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -82,8 +85,6 @@ def main_menu(res):
         button_start.change_color(pygame.mouse.get_pos(), font_main)
         button_settings.change_color(pygame.mouse.get_pos(), font_main)
         button_close.change_color(pygame.mouse.get_pos(), font_main)
-        cursor_pos = pygame.mouse.get_pos()
-        screen.blit(cursor_img, cursor_pos)
         pygame.display.update()
         clock.tick(60)
 
@@ -93,7 +94,8 @@ def main():
     pygame.font.init()
     ctypes.windll.user32.SetProcessDPIAware()
 
-    pygame.mouse.set_visible(False)
+    pygame.mouse.set_visible(True)
+
 
     x, y = get_display_size()
     res = (x, y)
