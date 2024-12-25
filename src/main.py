@@ -34,7 +34,6 @@ class Button():
             self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_button.png')
 
-
 def activate_window(title):
     app = pywinauto.Application().connect(title_re=title)
     app.top_window().set_focus()
@@ -59,7 +58,7 @@ def main_menu(res, screen, clock):
 
     button_start = Button('START', res[0]/2, res[1]*.45)
     button_settings = Button('SETTINGS', res[0]/2, res[1]*.65)
-    button_close = Button('CLOSE', res[0]/2, res[1]*.85)
+    button_close = Button('QUIT', res[0]/2, res[1]*.85)
     
     while True:
         for event in pygame.event.get():
