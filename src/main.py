@@ -34,6 +34,38 @@ class Button():
             self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_button.png')
 
+class Cycle():
+    def __init__(self, name, x, y):
+        self.name = name
+        self.img = pygame.image.load('img_files/ui_options.png')
+        self.x = x
+        self.y = y
+        self.font = pygame.font.SysFont('cambria', 50)
+        self.rect = self.img.get_rect(center=(self.x, self.y))
+        self.txt = self.font.render(self.name, True, 'gray')
+        self.txt_rect = self.txt.get_rect(center=(self.x, self.y))
+    
+    def update(self, screen):
+        screen.blit(self.img, self.rect)
+        screen.blit(self.txt, self.txt_rect)
+
+    def check_for_input(self, pos):
+        if pos[0] in range(self.rect.left, self.rect.left+56) and pos[1] in range(self.rect.top, self.rect.bottom):
+            return 1
+        if pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
+            return 2
+        
+    def change_color(self, pos):
+        if pos[0] in range(self.rect.left, self.rect.left+56) and pos[1] in range(self.rect.top, self.rect.bottom):
+            self.img = pygame.image.load('img_files/ui_options_right.png')
+        if pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
+            self.img = pygame.image.load('img_files/ui_options_left.png')
+        else:
+            self.txt = self.font.render(self.name, True, 'gray')
+            self.img = pygame.image.load('img_files/ui_options.png')
+
+
+
 class Protag():
     def __init__(self, name="protag", dir=1):
         self.name = name # name of the character protrayed in the sprite, displayed above dialogue box
@@ -53,7 +85,7 @@ class Protag():
         if race == 'cat':
             surf.blit(pygame.image.load(f"img_files/spr_protag_tail_{hair}.png"), (0,0)) # tail
         surf.blit(pygame.image.load(f"img_files/spr_protag_top_{skin}.png"), (0,0)) # top
-        surf.blit(pygame.image.load(f"img_files/spr_protag_head_{race}_{skin}.png"), (0,0))# head
+        surf.blit(pygame.image.load(f"img_files/spr_protag_head_{race}_{skin}.png"), (0,0)) # head
         if race == 'cat':
             surf.blit(pygame.image.load(f"img_files/spr_protag_ear_{hair}.png"), (0,0)) # cat ear recolor
         surf.blit(pygame.image.load(f"img_files/spr_clothing_bottom_1_1.png"), (0,0))
@@ -139,7 +171,7 @@ def play(res, screen, clock):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        chara1.draw(screen, 1, 2, 'cat')
+        chara1.draw(screen, 1, 2, 'human')
         pygame.display.update()
         clock.tick(60)
 
