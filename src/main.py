@@ -34,6 +34,32 @@ class Button():
             self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_button.png')
 
+class Protag():
+    def __init__(self, name="protag", dir=1):
+        self.name = name # name of the character protrayed in the sprite, displayed above dialogue box
+        self.dir = dir # determines whether sprite faces left or right, 1 = right, 0 = left
+
+    def draw(self, screen, skin, hair, race):
+        """
+        Draws character sprite on screen. 
+
+        :param screen: The 'screen' surface that other surfaces are blitted onto. 
+        :type screen: Surface
+
+        :return: None. 
+        :rtype: None. 
+        """
+        surf = pygame.image.load(f"img_files/spr_protag_bottom_{skin}.png") # bottom
+        if race == 'cat':
+            surf.blit(pygame.image.load(f"img_files/spr_protag_tail_{hair}.png"), (0,0)) # tail
+        surf.blit(pygame.image.load(f"img_files/spr_protag_top_{skin}.png"), (0,0)) # top
+        surf.blit(pygame.image.load(f"img_files/spr_protag_head_{race}_{skin}.png"), (0,0))# head
+        if race == 'cat':
+            surf.blit(pygame.image.load(f"img_files/spr_protag_ear_{hair}.png"), (0,0)) # cat ear recolor
+        if self.dir == 0:
+            surf = pygame.transform.flip(surf, 1, 0)
+        screen.blit(surf, (0,0))
+
 def activate_window(title):
     app = pywinauto.Application().connect(title_re=title)
     app.top_window().set_focus()
@@ -103,12 +129,14 @@ def settings_menu(res, screen, clock):
 
 def play(res, screen, clock):
     screen.fill('white')
+    chara1 = Protag("Alice", 0)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+        chara1.draw(screen, 1, 1, 'cat')
         pygame.display.update()
         clock.tick(60)
 
@@ -128,7 +156,7 @@ def main():
 
     screen = pygame.display.set_mode(res, pygame.FULLSCREEN)
     pygame.display.set_caption('Dress Up RPG')
-    activate_window("Dress Up RPG")
+    #activate_window("Dress Up RPG")
 
     # cursor settings
     cursor_img = pygame.image.load('img_files/ui_cursor.png')
