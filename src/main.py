@@ -35,15 +35,17 @@ class Button():
             self.img = pygame.image.load('img_files/ui_button.png')
 
 class Cycle():
-    def __init__(self, name, x, y):
+    def __init__(self, name, x, y, list, idx=0):
         self.name = name
         self.img = pygame.image.load('img_files/ui_options.png')
         self.x = x
         self.y = y
+        self.list = list
         self.font = pygame.font.SysFont('cambria', 50)
         self.rect = self.img.get_rect(center=(self.x, self.y))
         self.txt = self.font.render(self.name, True, 'gray')
         self.txt_rect = self.txt.get_rect(center=(self.x, self.y))
+        self.idx = idx
     
     def update(self, screen):
         screen.blit(self.img, self.rect)
@@ -54,6 +56,8 @@ class Cycle():
             return 1
         elif pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
             return 2
+        else:
+            return 0
         
     def change_color(self, pos):
         if pos[0] in range(self.rect.left, self.rect.left+56) and pos[1] in range(self.rect.top, self.rect.bottom):
@@ -61,8 +65,22 @@ class Cycle():
         elif pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
             self.img = pygame.image.load('img_files/ui_options_right.png')
         else:
-            self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_options.png')
+        self.txt = self.font.render(self.name, True, 'gray')
+
+    def change_idx(self, dir):
+        if dir == 0:
+            if self.idx - 1 > -1:
+                self.idx -= 1
+            else: 
+                self.idx = len(self.list)-1
+            self.name = self.list[self.idx]
+        if dir == 1:
+            if self.idx + 1 > len(self.list)-1:
+                self.idx = 0
+            else:
+                self.idx += 1
+            self.name = self.list[self.idx]
 
 class Protag():
     def __init__(self, name="protag", dir=1):
@@ -142,27 +160,14 @@ def main_menu(res, screen, clock):
         pygame.display.update()
         clock.tick(60)
 
-def cycle_button(button, options):
-    length = len(options)
-    if button == 1:
-        if idx - 1 > 0:
-            idx -= 1
-        else:
-            idx = length
-    elif button == 2:
-        if idx + 1 > length:
-            idx = 1
-        else: 
-            idx += 1
-    return options[idx]
-
 def settings_menu(res, screen, clock):
     screen.fill('gray')
 
-    button_return = Button('RETURN', res[0]/2, res[1]*.85)
-    button_res = Cycle('TEST1', res[0]/2, res[1]*.65)
-
     res_options = ['TEST1', 'TEST2', 'TEST3', 'TEST4']
+
+    button_return = Button('RETURN', res[0]/2, res[1]*.85)
+    button_res = Cycle('TEST1', res[0]/2, res[1]*.65, res_options)
+
 
     while True:
         for event in pygame.event.get():
@@ -172,9 +177,11 @@ def settings_menu(res, screen, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_return.check_for_input(pygame.mouse.get_pos()):
                     main_menu(res, screen, clock)
-                res_cycle = button_res.check_for_input(pygame.mouse.get_pos())
-                if res_cycle != 0:
-                    cycle_button(res_cycle, res_options)
+                if button_res.check_for_input(pygame.mouse.get_pos()) == 1:
+                    button_res.change_idx(0)
+                elif button_res.check_for_input(pygame.mouse.get_pos()) == 2:
+                    button_res.change_idx(1)
+
         button_return.update(screen)
         button_return.change_color(pygame.mouse.get_pos())
         button_res.update(screen)
@@ -191,7 +198,7 @@ def play(res, screen, clock):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        chara1.draw(screen, 1, 2, 'human')
+        chara1.draw(screen, 1, 1, 'cat')
         pygame.display.update()
         clock.tick(60)
 
