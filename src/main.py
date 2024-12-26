@@ -56,7 +56,9 @@ class Protag():
         surf.blit(pygame.image.load(f"img_files/spr_protag_head_{race}_{skin}.png"), (0,0))# head
         if race == 'cat':
             surf.blit(pygame.image.load(f"img_files/spr_protag_ear_{hair}.png"), (0,0)) # cat ear recolor
-        if self.dir == 0:
+        surf.blit(pygame.image.load(f"img_files/spr_clothing_bottom_1_1.png"), (0,0))
+        surf.blit(pygame.image.load(f"img_files/spr_clothing_top_1_1.png"), (0,0))
+        if self.dir == 0: # direction
             surf = pygame.transform.flip(surf, 1, 0)
         surf = pygame.transform.scale_by(surf, .6)
         screen.blit(surf, (0,0))
