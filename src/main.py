@@ -58,6 +58,7 @@ class Protag():
             surf.blit(pygame.image.load(f"img_files/spr_protag_ear_{hair}.png"), (0,0)) # cat ear recolor
         if self.dir == 0:
             surf = pygame.transform.flip(surf, 1, 0)
+        surf = pygame.transform.scale_by(surf, .6)
         screen.blit(surf, (0,0))
 
 def activate_window(title):
@@ -136,7 +137,7 @@ def play(res, screen, clock):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        chara1.draw(screen, 1, 1, 'cat')
+        chara1.draw(screen, 1, 2, 'cat')
         pygame.display.update()
         clock.tick(60)
 
@@ -156,7 +157,7 @@ def main():
 
     screen = pygame.display.set_mode(res, pygame.FULLSCREEN)
     pygame.display.set_caption('Dress Up RPG')
-    #activate_window("Dress Up RPG")
+    activate_window("Dress Up RPG")
 
     # cursor settings
     cursor_img = pygame.image.load('img_files/ui_cursor.png')
