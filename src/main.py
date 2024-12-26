@@ -52,7 +52,7 @@ class Cycle():
     def check_for_input(self, pos):
         if pos[0] in range(self.rect.left, self.rect.left+56) and pos[1] in range(self.rect.top, self.rect.bottom):
             return 1
-        if pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
+        elif pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
             return 2
         
     def change_color(self, pos):
@@ -142,11 +142,27 @@ def main_menu(res, screen, clock):
         pygame.display.update()
         clock.tick(60)
 
+def cycle_button(button, options):
+    length = len(options)
+    if button == 1:
+        if idx - 1 > 0:
+            idx -= 1
+        else:
+            idx = length
+    elif button == 2:
+        if idx + 1 > length:
+            idx = 1
+        else: 
+            idx += 1
+    return options[idx]
+
 def settings_menu(res, screen, clock):
     screen.fill('gray')
 
     button_return = Button('RETURN', res[0]/2, res[1]*.85)
     button_res = Cycle('TEST1', res[0]/2, res[1]*.65)
+
+    res_options = ['TEST1', 'TEST2', 'TEST3', 'TEST4']
 
     while True:
         for event in pygame.event.get():
@@ -156,6 +172,9 @@ def settings_menu(res, screen, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_return.check_for_input(pygame.mouse.get_pos()):
                     main_menu(res, screen, clock)
+                res_cycle = button_res.check_for_input(pygame.mouse.get_pos())
+                if res_cycle != 0:
+                    cycle_button(res_cycle, res_options)
         button_return.update(screen)
         button_return.change_color(pygame.mouse.get_pos())
         button_res.update(screen)
