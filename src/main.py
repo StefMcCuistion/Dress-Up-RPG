@@ -64,8 +64,6 @@ class Cycle():
             self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_options.png')
 
-
-
 class Protag():
     def __init__(self, name="protag", dir=1):
         self.name = name # name of the character protrayed in the sprite, displayed above dialogue box
@@ -148,6 +146,7 @@ def settings_menu(res, screen, clock):
     screen.fill('gray')
 
     button_return = Button('RETURN', res[0]/2, res[1]*.85)
+    button_res = Cycle('TEST1', res[0]/2, res[1]*.65)
 
     while True:
         for event in pygame.event.get():
@@ -155,10 +154,12 @@ def settings_menu(res, screen, clock):
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button_return:
+                if button_return.check_for_input(pygame.mouse.get_pos()):
                     main_menu(res, screen, clock)
         button_return.update(screen)
         button_return.change_color(pygame.mouse.get_pos())
+        button_res.update(screen)
+        button_res.change_color(pygame.mouse.get_pos())
         pygame.display.update()
         clock.tick(60)
 
