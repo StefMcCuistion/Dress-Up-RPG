@@ -57,9 +57,9 @@ class Cycle():
         
     def change_color(self, pos):
         if pos[0] in range(self.rect.left, self.rect.left+56) and pos[1] in range(self.rect.top, self.rect.bottom):
-            self.img = pygame.image.load('img_files/ui_options_right.png')
-        if pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
             self.img = pygame.image.load('img_files/ui_options_left.png')
+        elif pos[0] in range(self.rect.right-56, self.rect.right) and pos[1] in range(self.rect.top, self.rect.bottom):
+            self.img = pygame.image.load('img_files/ui_options_right.png')
         else:
             self.txt = self.font.render(self.name, True, 'gray')
             self.img = pygame.image.load('img_files/ui_options.png')
