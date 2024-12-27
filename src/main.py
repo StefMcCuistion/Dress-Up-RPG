@@ -193,7 +193,7 @@ def play(res, screen, clock):
     screen.fill('white')
     chara1 = Protag("Alice", 0)
     race_list = ['human', 'cat']
-    hair_list = ['brown', 'black']
+    hair_list = ['brown', 'black', 'blonde']
     skin_list = ['1']
 
     button_race = Cycle(res[0]*.8, res[1]*.2, race_list)
@@ -211,10 +211,12 @@ def play(res, screen, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_return.check_for_input(pygame.mouse.get_pos()):
                     main_menu(res, screen, clock)
-                if button_race.check_for_input(pygame.mouse.get_pos()) == 1:
-                    button_race.change_idx(0)
-                elif button_race.check_for_input(pygame.mouse.get_pos()) == 2:
-                    button_race.change_idx(1)
+                if button_race.check_for_input(pygame.mouse.get_pos()) > 0:
+                    if button_race.check_for_input(pygame.mouse.get_pos()) == 1:
+                        button_race.change_idx(0)
+                    elif button_race.check_for_input(pygame.mouse.get_pos()) == 2:
+                        button_race.change_idx(1)
+                    screen.fill('white')
                 if button_hair.check_for_input(pygame.mouse.get_pos()) == 1:
                     button_hair.change_idx(0)
                 elif button_hair.check_for_input(pygame.mouse.get_pos()) == 2:
@@ -223,7 +225,6 @@ def play(res, screen, clock):
                     button_skin.change_idx(0)
                 elif button_skin.check_for_input(pygame.mouse.get_pos()) == 2:
                     button_skin.change_idx(1)
-                screen.fill('white')
                 chara1.draw(screen, skin_list[button_skin.idx], hair_list[button_hair.idx], race_list[button_race.idx])
 
         button_return.update(screen)
