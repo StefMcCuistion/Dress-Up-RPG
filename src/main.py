@@ -35,17 +35,17 @@ class Button():
             self.img = pygame.image.load('img_files/ui_button.png')
 
 class Cycle():
-    def __init__(self, name, x, y, list, idx=0):
-        self.name = name
+    def __init__(self, x, y, list, idx=0):
         self.img = pygame.image.load('img_files/ui_options.png')
         self.x = x
         self.y = y
         self.list = list
+        self.idx = idx
+        self.name = self.list[self.idx]
         self.font = pygame.font.SysFont('cambria', 50)
         self.rect = self.img.get_rect(center=(self.x, self.y))
         self.txt = self.font.render(self.name, True, 'gray')
         self.txt_rect = self.txt.get_rect(center=(self.x, self.y))
-        self.idx = idx
     
     def update(self, screen):
         screen.blit(self.img, self.rect)
@@ -163,10 +163,10 @@ def main_menu(res, screen, clock):
 def settings_menu(res, screen, clock):
     screen.fill('gray')
 
-    res_options = ['TEST1', 'TEST2', 'TEST3', 'TEST4']
+    res_options = ['TEST1', 'TEST2', 'TEST3', 'TEST4', 'TEST5']
 
     button_return = Button('RETURN', res[0]/2, res[1]*.85)
-    button_res = Cycle('TEST1', res[0]/2, res[1]*.65, res_options)
+    button_res = Cycle(res[0]/2, res[1]*.65, res_options)
 
 
     while True:
@@ -192,13 +192,48 @@ def settings_menu(res, screen, clock):
 def play(res, screen, clock):
     screen.fill('white')
     chara1 = Protag("Alice", 0)
+    race_list = ['human', 'cat']
+    hair_list = ['brown', 'black']
+    skin_list = ['1']
+
+    button_race = Cycle(res[0]*.8, res[1]*.2, race_list)
+    button_hair = Cycle(res[0]*.8, res[1]*.25, hair_list)
+    button_skin = Cycle(res[0]*.8, res[1]*.3, skin_list)
+    button_return = Button('RETURN', res[0]/2, res[1]*.85)
+    chara1.draw(screen, 1, 1, race_list[button_race.idx])
+
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        chara1.draw(screen, 1, 1, 'cat')
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_return.check_for_input(pygame.mouse.get_pos()):
+                    main_menu(res, screen, clock)
+                if button_race.check_for_input(pygame.mouse.get_pos()) == 1:
+                    button_race.change_idx(0)
+                elif button_race.check_for_input(pygame.mouse.get_pos()) == 2:
+                    button_race.change_idx(1)
+                if button_hair.check_for_input(pygame.mouse.get_pos()) == 1:
+                    button_hair.change_idx(0)
+                elif button_hair.check_for_input(pygame.mouse.get_pos()) == 2:
+                    button_hair.change_idx(1)
+                if button_skin.check_for_input(pygame.mouse.get_pos()) == 1:
+                    button_skin.change_idx(0)
+                elif button_skin.check_for_input(pygame.mouse.get_pos()) == 2:
+                    button_skin.change_idx(1)
+                screen.fill('white')
+                chara1.draw(screen, skin_list[button_skin.idx], hair_list[button_hair.idx], race_list[button_race.idx])
+
+        button_return.update(screen)
+        button_return.change_color(pygame.mouse.get_pos())
+        button_race.update(screen)
+        button_race.change_color(pygame.mouse.get_pos())
+        button_hair.update(screen)
+        button_hair.change_color(pygame.mouse.get_pos())
+        button_skin.update(screen)
+        button_skin.change_color(pygame.mouse.get_pos())
         pygame.display.update()
         clock.tick(60)
 
